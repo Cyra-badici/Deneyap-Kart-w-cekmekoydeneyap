@@ -1,0 +1,88 @@
+#include "deneyap.h"
+#include "BluetoothSerial.h"
+BluetoothSerial SerialBT; 
+
+int hizayarisag=D0;
+int hizayarisol=D1;       
+int sagileri  = D4;  
+int saggeri  = D5;  
+int solileri  = D6; 
+int solgeri  = D7; 
+
+int deger; 
+int hiz;
+
+void setup() {
+  SerialBT.begin("Robotçu Dayı"); 
+  Serial.begin(9600);
+  
+  pinMode(hizayarisag,OUTPUT);
+  pinMode(hizayarisol,OUTPUT);
+  pinMode(sagileri, OUTPUT);
+  pinMode(saggeri, OUTPUT);
+  pinMode(solileri, OUTPUT);
+  pinMode(solgeri, OUTPUT);
+
+  ledcSetup(0,30000,8);  // kanal 0-15 arası, frekans=5000 , çözünürlük=8 bit (0-255 arası değer)
+  ledcSetup(1,30000,8); 
+  ledcAttachPin(hizayarisag, 0); 
+  ledcAttachPin(hizayarisol, 1);        
+}
+
+void loop() {
+    if(SerialBT.available()){     
+      deger = SerialBT.read();  
+    }
+    
+/* 4 kademeli hız seviyesi*/
+    if (deger == '0'){
+      hiz=0;}
+    else if (deger == '1'){
+      hiz=150;}
+    else if (deger == '2'){
+      hiz=180;}
+    else if (deger == '3'){
+      hiz=210;}
+    else if (deger == '4'){
+      hiz=255;}
+
+    Serial.println(hiz);
+    
+    ledcWrite(0, hiz); 
+    ledcWrite(1, hiz); 
+      /***********************İleri****************************/
+    if (deger == 'F') {
+      digitalWrite(sagileri, 1); 
+      digitalWrite(saggeri, 0);
+      digitalWrite(solileri, 1);      
+      digitalWrite(solgeri, 0); 
+    }
+  /***********************Geri****************************/
+    else if (deger == 'B') {
+      digitalWrite(sagileri, 0);   
+      digitalWrite(saggeri, 1); 
+      digitalWrite(solileri, 0);   
+      digitalWrite(solgeri, 1); 
+    }
+  /***************************Sol*****************************/
+    else if (deger == 'L') {
+      digitalWrite(sagileri, 1);   
+      digitalWrite(saggeri, 0); 
+      digitalWrite(solileri, 0); 
+      digitalWrite(solgeri, 1); 
+    }
+  /***************************Sağ*****************************/
+    else if (deger == 'R') {
+      digitalWrite(sagileri, 0);   
+      digitalWrite(saggeri, 1); 
+      digitalWrite(solileri,1);   
+      digitalWrite(solgeri, 0);     
+    }
+  /************************Stop*****************************/
+    else if (deger == 'S'){
+        digitalWrite(sagileri, 0);  
+        digitalWrite(saggeri, 0); 
+        digitalWrite(solileri, 0);  
+        digitalWrite(solgeri, 0);
+    }   
+}

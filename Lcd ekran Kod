@@ -1,0 +1,291 @@
+   #include "EspMQTTClient.h"
+  #include <LCD_I2C.h>
+  LCD_I2C lcd(0x27); 
+  
+  EspMQTTClient client(
+    "DENEYAP 2",
+    "Deneyap.2023T",
+    "broker.mqttdashboard.com",  // MQTT Broker server i  
+    "broId2-EGIy8iLFcP",     // Client name that uniquely identify your device
+    1883              // The MQTT port, default to 1883. this line can be omitted
+  );
+  
+  void setup()
+  {
+    Serial.begin(115200);
+     lcd.begin(); // If you are using more I2C devices using the Wire library use lcd.begin(false)
+                   // this stop the library(LCD_I2C) from calling Wire.begin()
+      lcd.backlight();
+  
+    // Optional functionalities of EspMQTTClient
+    client.enableDebuggingMessages(); // Enable debugging messages sent to serial output
+    client.enableHTTPWebUpdater(); // Enable the web updater. User and password default to values of MQTTUsername and MQTTPassword. These can be overridded with enableHTTPWebUpdater("user", "password").
+    client.enableOTA(); // Enable OTA (Over The Air) updates. Password defaults to MQTTPassword. Port is the default OTA port. Can be overridden with enableOTA("password", port).
+    client.enableLastWillMessage("TestClient/lastwill", "I am going offline");  // You can activate the retain flag by setting the third parameter to true
+  }
+  
+  // This function is called once everything is connected (Wifi and MQTT)
+  // WARNING : YOU MUST IMPLEMENT IT IF YOU USE EspMQTTClient
+  void onConnectionEstablished()
+  {
+    // Subscribe to "mytopic/test" and display received message to Serial
+    client.subscribe("deneyap2", [](const String & payload) {
+      Serial.println(payload);
+      if(payload == "Salon 1'in ışığını aç"){
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Salon 1 ");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+  if (payload == "Salon 1'in ışığını kapat"){
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Salon 1");
+      lcd.setCursor(8 , 0);
+      lcd.print("Isiklari");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Kapatildi");
+      delay(5000);
+      lcd.clear();
+  }
+      
+      
+      if(payload == "Salon 2'nin ışığını aç" ){
+     lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Salon 1 ");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if(payload == "Salon 2'nin ışığını kapat"){
+        lcd.clear();
+       lcd.setCursor(0, 0);
+      lcd.print("Salon 2 'nin");
+      lcd.setCursor(8 , 0);
+      lcd.print("Isiklari");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Kapandi");
+      delay(5000);
+      lcd.clear();
+  
+      }
+  
+      if(payload == "Salonun ışığını aç"){
+        lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Salonun");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if (payload == "Salonun ışığını kapat"){
+        lcd.clear();
+        lcd.setCursor(0, 0);
+      lcd.print("Salonun");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Kapatildi");
+      delay(5000);
+      }
+  
+      if(payload == "Çocuk odasının ışığını aç"){
+        lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Cocuk Odasinin");
+      lcd.setCursor(0 , 1);
+      lcd.print("Isiklari acildi");
+      delay(5000);
+  lcd.clear();
+      }
+  
+      if (payload == "Çocuk odasının ışığını kapat"){
+  lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Cocuk Odasının");
+      lcd.setCursor(0 , 1);
+      lcd.print("Isiklari");
+      lcd.setCursor(8, 1); // Or setting the cursor in the desired position.
+      lcd.print("Kapandi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if(payload == "Çocuk odasının gece lambasını aç"){
+        lcd.clear();
+     lcd.setCursor(0, 0);
+      lcd.print("Cocuk Odasının");
+      lcd.setCursor(0 , 1);
+      lcd.print("G.Lambasi");
+      lcd.setCursor(10, 1); // Or setting the cursor in the desired position.
+      lcd.print("Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if(payload == "Çocuk odasının gece lambasını kapat"){
+        lcd.clear();
+           lcd.setCursor(0, 0);
+      lcd.print("Cocuk Odasının");
+      lcd.setCursor(0 , 1);
+      lcd.print("G.Lambasi");
+      lcd.setCursor(8, 1); // Or setting the cursor in the desired position.
+      lcd.print("Kapandi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if (payload == "Banyonun ışığını aç"){
+        lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Banyonun");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if(payload =="Banyonu ışığını kapat"){
+        lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Banyonun");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Kapatildi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if (payload == "Tuvaletin ışığını aç"){
+        lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Tuvaletin");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if(payload == "Tuvaletin ışığını kapat"){
+        lcd.clear();
+       lcd.setCursor(0, 0);
+      lcd.print("Tuvaletin");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Kapatildi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if(payload == "Yatak odasının ışığını aç"){
+        lcd.clear();
+       lcd.setCursor(0, 0);
+      lcd.print("Yatak Odasinin");
+      lcd.setCursor(0 , 1);
+      lcd.print("Isiklari");
+      lcd.setCursor(8, 1); // Or setting the cursor in the desired position.
+      lcd.print("Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+   
+      if(payload == "Yatak odasının ışığını kapat"){
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Yatak Odasinin");
+      lcd.setCursor(0 , 1);
+      lcd.print("Isiklarini");
+      lcd.setCursor(8, 1); // Or setting the cursor in the desired position.
+      lcd.print("Kapandi");
+      delay(5000);
+      lcd.clear();
+      }
+
+      if(payload == "Gece lambalarını aç"){
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Gece lambalari");
+        lcd.setCursor(0 , 1);
+        lcd.print("Acildi");
+        delay(5000);
+        lcd.clear();
+      }
+
+      if(payload == "Gece lambalarını kapat"){
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Gece lambalari");
+        lcd.setCursor(0 , 1);
+        lcd.print("Kapatildi");
+        delay(5000);
+        lcd.clear();
+      }
+      
+      if(payload == "Yatak odasının gece lambasını aç"){
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Yatak Odasinin");
+        lcd.setCursor(0 , 1);
+        lcd.print("G.Lambasi Acildi");
+        delay(5000);
+        lcd.clear();
+      }
+  
+      if(payload == "Yatak odasının gece lambasını kapat"){
+        lcd.clear();
+       lcd.setCursor(0, 0);
+      lcd.print("Yatak Odasının");
+      lcd.setCursor(0 , 1);
+      lcd.print("G.Lambasi Kapandi");
+      delay(5000);
+      lcd.clear();
+      }
+  
+      if (payload == "Mutfağın ışığını aç"){
+        lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Mutfagin");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Acildi");
+      delay(5000);
+      lcd.clear();
+      }
+        if (payload == "Mutfağın ışığını kapat"){
+  lcd.clear();
+       lcd.setCursor(0, 0);
+      lcd.print("Mutfagin");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Kapatildi");
+      delay(5000);
+      lcd.clear();
+        }
+  
+        if(payload == "Koridorun ışığını aç"){
+          lcd.clear();
+       lcd.setCursor(0, 0);
+      lcd.print("Koridorun");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Acildi");
+      delay(5000);
+      lcd.clear();
+        }
+  
+        if(payload == "Koridorun ışığını kapat"){
+          lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Koridorun");
+      lcd.setCursor(0, 1); // Or setting the cursor in the desired position.
+      lcd.print("Isiklari Kapatildi");
+      delay(5000);
+      lcd.clear();
+        } 
+        
+    });
+}
+void loop(){
+  client.loop();
+}

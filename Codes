@@ -1,0 +1,181 @@
+#include "EspMQTTClient.h"
+EspMQTTClient client(
+  "DENEYAP 2",
+  "Deneyap.2023T",
+  "broker.mqttdashboard.com",
+  "broId-12MSzHE5qW",
+  1883
+);
+
+//LED
+#define salon1LED D0
+#define salon2LED D1
+#define cYatakLmb D4
+#define cYatakGece D5
+#define mutfakLED D6
+#define yatakLED D7
+#define yatakGece D8
+#define tuvaletLED D9
+#define banyoLED D10
+#define koridorLED D11
+
+//Sensor
+#define gazSensor A0
+
+void setup()
+{
+  Serial.begin(115200);
+  pinMode(salon1LED, OUTPUT);
+  pinMode(salon2LED, OUTPUT);
+  pinMode(cYatakLmb, OUTPUT);
+  pinMode(cYatakGece, OUTPUT);
+  pinMode(mutfakLED, OUTPUT);
+  pinMode(yatakLED, OUTPUT);
+  pinMode(yatakGece, OUTPUT);
+  pinMode(tuvaletLED, OUTPUT);
+  pinMode(banyoLED, OUTPUT);
+  pinMode(koridorLED, OUTPUT);
+  client.enableDebuggingMessages();
+  client.enableHTTPWebUpdater();
+  client.enableOTA();
+  client.enableLastWillMessage("TestClient/lastwill", "I am going offline"); 
+}
+
+void onConnectionEstablished()
+{
+  client.subscribe("deneyap", [](const String & payload) {
+    Serial.println(payload);
+    if(payload == "Salonun ışığını açSalonun ışığını aç" || payload == "salonun ışığını aç"){
+      client.publish("deneyap2" , "Salonun ışığını aç");
+      digitalWrite(salon1LED, HIGH);
+      digitalWrite(salon2LED, HIGH);
+    }
+    if(payload == "Salonun ışığını kapat" || payload == "salonun ışığını kapat"){
+      client.publish("deneyap2" , "Salonun ışığını kapat");
+      digitalWrite(salon1LED, LOW);
+      digitalWrite(salon2LED, LOW);
+    }
+    if(payload == "Salon 1'in ışığını aç" || payload == "salon 1'in ışığını aç"){
+      client.publish("deneyap2" , "Salon 1'in ışığını aç");
+      digitalWrite(salon1LED, HIGH);
+    }
+    if(payload == "Salon 1'in ışığını kapat" || payload == "salon 1'in ışığını kapat"){
+      client.publish("deneyap2" , "Salon 1 'in ışığını kapat");
+      digitalWrite(salon1LED, LOW);
+    }
+    if(payload == "Salon 2'nin ışığını aç" || payload == "salon 2'nin ışığını aç"){
+      client.publish("deneyap2" , "Salon 2'nin ışığını aç");
+      digitalWrite(salon2LED, HIGH);
+    }
+    if(payload == "Salon 2'nin ışığını kapat" || payload == "salon 2'nin ışığını kapat"){
+      client.publish("deneyap2" , "Salon 2'nin ışığını kapat");
+      digitalWrite(salon2LED, LOW);
+    }
+    if(payload == "Çocuk odasının ışığını aç" || payload == "çocuk odasının ışığını aç"){
+      client.publish("deneyap2" , "Çocuk odasının ışığını aç");
+      digitalWrite(cYatakLmb, HIGH);
+    }
+    if(payload == "Çocuk odasının ışığını kapat" || payload == "çocuk odasının ışığını kapat"){
+      client.publish("deneyap2" , "Çocuk odasının ışığını kapat");
+      digitalWrite(cYatakLmb, LOW);
+    }
+    if(payload == "Gece lambalarını aç" || payload == "gece lambalarını aç"){
+      client.publish("deneyap2" , "Gece lambalarını aç");
+      digitalWrite(cYatakGece, HIGH);
+      digitalWrite(yatakGece, HIGH);
+    }
+    if(payload == "Gece lambalarını kapat" || payload == "gece lambalarını kapat"){
+      client.publish("deneyap2" , "Gece lambalarını kapat");
+      digitalWrite(cYatakGece, LOW);
+      digitalWrite(yatakGece, LOW);
+    }
+    if(payload == "Çocuk odasının gece lambasını aç" || payload == "çocuk odasının gece lambasını aç"){
+      client.publish("deneyap2" , "Çocuk odasının gece lambalasını aç");
+      digitalWrite(cYatakGece, HIGH);
+    }
+    if(payload == "Çocuk odasının gece lambasını kapat" || payload == "çocuk odasının gece lambasını kapat"){
+      client.publish("deneyap2" , "Çocuk odasının gece lambasını kapat");
+      digitalWrite(cYatakGece, LOW);
+    }
+    if(payload == "Banyonun ışığını aç" || payload == "banyonun ışığını aç"){
+      client.publish("deneyap2","Banyonun ışığını aç");
+      digitalWrite(banyoLED, HIGH);
+    }
+    if(payload == "Banyonun ışığını kapat" || payload == "banyonun ışığını kapat"){
+      client.publish("deneyap2" , "Banyonun ışığını kapat");
+      digitalWrite(banyoLED, LOW);
+    }
+    if(payload == "Tuvaletin ışığını aç" || payload == "tuvaletin ışığını aç"){
+      client.publish("deneyap2" , "Tuvaletin ışığını aç");
+      digitalWrite(tuvaletLED, HIGH);
+    }
+    if(payload == "Tuvaletin ışığını kapat" || payload == "tuvaletin ışığını kapat"){
+      client.publish("deneyap2" , "Tuvaletin ışığını kapat");
+      digitalWrite(tuvaletLED, LOW);
+    }
+    if(payload == "Yatak odasının ışığını aç" || payload == "yatak odasının ışığını aç"){
+      client.publish("deneyap2" , "Yatak odasının ışığını aç"); 
+      digitalWrite(yatakLED, HIGH);
+    }
+    if(payload == "Yatak odasının ışığını kapat" || payload == "yatak odasının ışığını kapat"){
+      client.publish("deneyap2" , "Yatak odasının ışığını kapat");
+      digitalWrite(yatakLED, LOW);
+    }
+    if(payload == "Yatak odasının gece lambasını aç" || payload == "yatak odasının gece lambasını aç"){
+      client.publish("deneyap2" , "Yatak odasının gece lambasını aç");
+      digitalWrite(yatakGece, HIGH);
+    }
+    if(payload == "Yatak odasının gece lambasını kapat" || payload == "yatak odasının gece lambasını kapat"){
+      client.publish("deneyap2" , "Yatak odasının gece lambasını kapat");
+      digitalWrite(yatakGece, LOW);
+    }
+    if(payload == "Mutfağın ışığını aç" || payload == "mutfağın ışığını aç"){
+      client.publish("deneyap2" , "Mutfağın ışığını aç");
+      digitalWrite(mutfakLED, HIGH);
+    }
+    if(payload == "Mutfağın ışığını kapat" || payload == "mutfağın ışığını kapat"){
+      client.publish("deneyap2" , "Mutfağın ışığını kapat");
+      digitalWrite(mutfakLED, LOW);
+    }
+    if(payload == "Koridorun ışığını aç" || payload == "koridorun ışığını aç"){
+      client.publish("deneyap2" , "Koridorun ışığını aç");
+      digitalWrite(koridorLED, HIGH);
+    }
+    if(payload == "Koridorun ışığını kapat" || payload == "koridorun ışığını kapat"){
+      client.publish("deneyap2" , "Koridorun ışığını kapat");
+      digitalWrite(koridorLED, LOW);
+    }
+    if(payload == "Tüm ledleri aç" || payload == "tüm ledleri aç"){
+      client.publish("deneyap2" , "Tüm ledleri aç");
+      digitalWrite(salon1LED, HIGH);
+      digitalWrite(salon2LED, HIGH);
+      digitalWrite(cYatakLmb, HIGH);
+      digitalWrite(cYatakGece, HIGH);
+      digitalWrite(mutfakLED, HIGH);
+      digitalWrite(yatakLED, HIGH);
+      digitalWrite(yatakGece, HIGH);
+      digitalWrite(tuvaletLED, HIGH);
+      digitalWrite(banyoLED, HIGH);
+      digitalWrite(koridorLED, HIGH);
+      
+    }
+    if(payload == "Tüm ledleri kapat" || payload == "tüm ledleri kapat"){
+      client.publish("deneyap2" , "Tüm ledleri kapat");
+      digitalWrite(salon1LED, LOW);
+      digitalWrite(salon2LED, LOW);
+      digitalWrite(cYatakLmb, LOW);
+      digitalWrite(cYatakGece, LOW);
+      digitalWrite(mutfakLED, LOW);
+      digitalWrite(yatakLED, LOW);
+      digitalWrite(yatakGece, LOW);
+      digitalWrite(tuvaletLED, LOW);
+      digitalWrite(banyoLED, LOW);
+      digitalWrite(koridorLED, LOW);
+      
+    }
+  });
+}
+void loop()
+{
+  client.loop();
+}
